@@ -1,0 +1,216 @@
+/* Werken met CSS-variabelen. Maak gebruik van de standaard Vives look en feel. */
+:root{
+    --defaultFontSize: 16px;
+    --defaultMargin: 20px;
+    --logoHeight: 48px;
+    --defaultRadius: 4px;
+    --defaultShadow: 2px;
+    --defaultColorOpionHeight: 30px;
+
+    --vivesRed: #e00020;
+    --vivesOffWhite: #efeee9;
+    --vivesDark: #1e1e1e;
+
+    --vivesFont: Poppins,Helvetica,Arial,sans-serif;
+}
+
+/* Alles border box sizen... */
+*{
+    box-sizing: border-box;
+}
+
+body{
+    margin: 0 auto;
+
+    padding: var(--defaultMargin);
+    font-family: var(--vivesFont);
+
+    color: var(--vivesDark);
+    font-size: var(--defaultFontSize);
+    min-width: 350px;
+    max-width: 1600px;
+
+    position: relative;
+}
+
+/* Subtiele lach toveren... */
+#backgroundSmile{
+    position: fixed;    /* or absolute */
+    top: 0;
+    right: 0;
+    transform: translate(25%, -35%);
+    opacity: 0.02;
+    z-index: -1;
+}
+
+/* Merk op: maak gebruik van calc() om berekeningen te maken in CSS... */
+header{
+    display: grid;
+    grid-template-columns: auto var(--logoHeight);
+    padding-bottom: calc(var(--defaultMargin) / 2);
+    border-bottom: calc(var(--defaultRadius) / 2) solid var(--vivesOffWhite);
+}
+
+header > a > img{
+    height: var(--logoHeight);
+}
+
+#menuIcon{
+    text-align: right;
+    font-size: var(--logoHeight) !important;
+}
+
+#menuIcon:hover{
+    cursor: pointer;
+}
+
+nav{
+    background-color: var(--vivesOffWhite);
+    color: var(--vivesDark);
+    line-height: 2em;
+    text-align: right;
+    text-transform: uppercase;  
+    display: none;
+}
+
+nav > #linkWrapper{
+    display: grid;
+}
+
+nav > #linkWrapper > a{
+    text-align: right;
+    text-decoration: none;
+    color: inherit;    
+    padding-right: var(--defaultMargin);
+}
+
+nav > #linkWrapper > a:hover{
+    background-color: var(--vivesRed);
+    color: white;
+}
+
+body > h1:first-of-type{
+    border-top: calc(var(--defaultRadius)/2) solid var(--vivesOffWhite);
+    margin-top: 0px;
+    padding-top: var(--defaultMargin);
+    padding-right: var(--defaultMargin);
+    text-align: right;
+}
+
+#content{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--defaultMargin);
+}
+
+.contentItem{
+    grid-column: span 2;
+    border-radius: var(--defaultRadius);
+    border-color: var(--vivesOffWhite);
+    border-width: var(--defaultRadius);
+    border-style: solid;
+    padding: calc(var(--defaultMargin) - var(--defaultRadius));
+}
+
+.contentItem > h1{
+    margin: 0px;
+}
+
+.contentItem > ul{
+    list-style: disc;
+    padding-left: var(--defaultFontSize);
+}
+
+.twoCols{
+    display: grid;
+    gap: var(--defaultMargin);
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.twoCols > img{
+    width: 100%;
+    border-radius: var(--defaultRadius);
+}
+
+.red{
+    background-color: var(--vivesRed);
+    color: white;
+    padding: var(--defaultMargin);
+    border-style: none;
+}
+
+.offWhite{
+    background-color: var(--vivesOffWhite);
+    color: var(--vivesDark);
+    padding: var(--defaultMargin);
+    border-style: none;
+}
+
+a, a:visited{
+    color: inherit;
+}
+
+input{
+    font-size: inherit;
+    width: 100%;
+}
+
+#colorSelectWrapper{
+    margin-top: var(--defaultMargin);
+    margin-bottom: var(--defaultMargin);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    row-gap: var(--defaultMargin);
+    column-gap: var(--defaultMargin);
+}
+
+.colorOption{
+    height: var(--defaultColorOpionHeight);
+    border: 1px solid black;
+    text-align: center;
+    color: white;
+    align-content: center;
+    font-weight: bold;
+}
+
+footer{
+    background-color: var(--vivesDark);
+    color: white;
+    text-align: center;
+    line-height: var(--logoHeight);
+    font-size: 0.8em;
+    margin-top: var(--defaultMargin);
+}
+
+@media screen and (max-width: 700px) {
+    .twoCols{
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Merk op: het gebruik van CSS-variabelen in de media queries, is niet mogelijk. */
+@media screen and (min-width: 1201px){
+    :root{
+        --defaultMargin: 35px;
+    }
+
+    nav > #linkWrapper{
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    nav > #linkWrapper > a{
+        text-align: center;
+        padding: 0px;
+    }
+
+    .contentItem{
+        grid-column: span 1;
+    }
+
+    /* Stel de CSS selector op om van de .contentItem elementen, enkel het laatste element te 
+        selecteren als er in totaal een oneven aantal .contentItem element zijn in #content.
+        Of met andere woorden: ga het laatste child zoeken, indien het om een oneven aantal children gaat... */
+    .contentItem:nth-last-child(1):nth-child(odd){
+        grid-column: span 2;
+    }
+}

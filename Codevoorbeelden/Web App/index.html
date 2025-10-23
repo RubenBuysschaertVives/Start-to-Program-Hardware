@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="nl-BE">
+<head>
+	<!-- https://strudel.rubu.be -->
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start 2 Study</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+
+    <!-- Link naar stijlblad. -->
+    <link href="styles/style.css" rel="stylesheet">
+
+    <!--Google Icon Font importeren-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- jQuery importeren. -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+    <!-- MQTT-bibliotheek laden. Zie: https://www.eclipse.org/paho/clients/js/ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
+
+    <!-- Eigen script toevoegen. -->
+    <script src="scripts/script.js"></script>
+
+    <!-- Manifest toevoegen. -->
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <img src="images/vives smile only.png" alt="Vives smile" id="backgroundSmile">
+
+    <header>
+        <a href="#"><img src="images/vives smile.svg" id="logo"></a>
+        <span class="material-icons" id="menuIcon">menu</span>
+    </header>
+
+    <nav>
+        <div id="linkWrapper">
+            <!-- OPM: voorlopig zonder echte functie... -->
+            <a href="#">home</a>
+            <a href="#">link 1</a>
+            <a href="#">link 2</a>
+            <a href="#">link 3</a>
+            <a href="#">contact</a>
+        </div>
+    </nav>
+
+    <h1>Start 2 Study</h1>
+
+    <div id="content">
+        <div class="contentItem white">
+            <h1>LED-strip kleurinstelling</h1>
+
+            <div id="colorSelectWrapper">
+                <div class="colorOption" style="background-color: red;"></div>
+                <div class="colorOption" style="background-color: green;"></div>
+                <div class="colorOption" style="background-color: blue;"></div>
+                <div class="colorOption" style="background-color: white;"></div>
+                <div class="colorOption" style="background-color: cyan;"></div>
+                <div class="colorOption" style="background-color: magenta;"></div>
+                <div class="colorOption" style="background-color: yellow;"></div>
+                <div class="colorOption" style="background-color: gray;">random</div>
+            </div>
+        </div>
+
+        <div class="contentItem red">
+            <h1>MQTT-instellingen</h1>
+            <p>
+                <label for="tbxMqttBroker">MQTT-broker</label>
+                <input type="text" id="tbxMqttBroker" value="mqtt.rubu.be">
+            </p>
+            
+            <p>
+                <label for="tbxMqttBroker">MQTT-gebruiker</label>
+                <input type="text" id="tbxMqttUser" value="strudel">
+            </p>
+
+            <p>
+                <label for="tbxMqttBroker">MQTT-wachtwoord</label>
+                <input type="password" id="tbxMqttPwd" value="qifj3258">
+            </p>
+        </div>
+
+        <div class="contentItem offWhite">
+            <h1>Intro programming</h1>
+
+            <h2>Hoger onderwijs</h2>
+            <p>Sta je op het punt over te stappen naar het hoger onderwijs? Dan is alle info welkom! Deze website helpt 
+                je om kennis te maken met programmeren.</p>
+            <p>Via deze app kan je het kleur instellen van een adresseerbare LED-strip, aangestuurd door Strudel...</p>
+            
+            <h2>Professionele bachelor</h2>
+            <p>Het project StrudEL-ICT, combineert allerhande technieken en tools om de opleiding Professionele 
+                Bacherlor Elektronica-ICT in Vives Kortrijk te promoten.</p>
+
+            <h2>Meer info</h2>
+            <p>Op zoek naar nog meer info, of wil je iemand van de opleiding contacteren?
+                <br><br>Zie: <a href="https://www.vives.be/nl/technology/elektronica-ict" target="_blank">Elektronica-ICT in Vives Kortrijk</a>.</p>
+        </div>
+    </div>
+
+    <footer>
+        &COPY; Vives - Elektronica-ICT Kortrijk
+    </footer>
+</body>
+</html>
