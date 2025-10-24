@@ -94,6 +94,13 @@ function onMqttConnected() {
 
         // Verbinding met MQTT-broker verbreken.
         mqttClient.disconnect();
+
+        // Laatst verzonden kleur tonen op de UI en tekst wissen.
+        document.getElementById("colorLastSent").innerHTML = "";
+        if(requestedColor != "random")
+            document.getElementById("colorLastSent").style.backgroundColor = requestedColor;
+        else
+            document.getElementById("colorLastSent").style.backgroundColor = "gray";
     }
     catch (error) {
         console.log("Error publishing to MQTT-broker:", error);

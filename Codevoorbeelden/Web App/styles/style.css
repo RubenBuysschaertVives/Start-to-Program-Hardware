@@ -164,13 +164,18 @@ input{
     column-gap: var(--defaultMargin);
 }
 
-.colorOption{
+.colorOption, #colorLastSent{
     height: var(--defaultColorOpionHeight);
     border: 1px solid black;
+    border-radius: var(--defaultRadius);
     text-align: center;
     color: white;
     align-content: center;
     font-weight: bold;
+}
+
+#colorLastSent{
+    color: var(--vivesDark);
 }
 
 footer{
