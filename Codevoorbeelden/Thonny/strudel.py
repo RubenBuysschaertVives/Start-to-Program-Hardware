@@ -15,24 +15,24 @@ import ujson
 import random
 
 
-# Drie meter LED-strip met telkens 60 LED's per meter (R, G, B, W).
-number_of_leds = 180
+# Eén meter LED-strip met telkens 60 LED's per meter (R, G, B).
+number_of_leds = 60
 
 # Aangeven op welke pin de LED-strip is gekoppeld met de microcontroller.
 din = machine.Pin(5)
 
 # Een NeoPixel object maken met de juiste instellingen.
-# Aangezien we hier een RGBW LED-strip gebruiken, zijn er 4 'bytes per pixel'.
-# Zie: https://www.tinytronics.nl/nl/verlichting/led-strips/led-strips/sk6812-digitale-5050-rgbw-led-strip-60-leds-1m
+# Aangezien we hier een RGB LED-strip gebruiken, zijn er 3 'bytes per pixel'.
+# Zie: https://www.tinytronics.nl/nl/verlichting/led-strips/led-strips/ws2813-digitale-5050-rgb-led-strip-60-leds-1m
 # Constructor info: https://docs.micropython.org/en/latest/library/neopixel.html
-np = neopixel.NeoPixel(din, number_of_leds, bpp=4)
+np = neopixel.NeoPixel(din, number_of_leds, bpp=3)
 
-# Globale variabele (tuple) om het kleur van de LED-strip te bewaren (R, G, B, W).
-led_strip_color = (0, 0, 40, 0)
+# Globale variabele (tuple) om het kleur van de LED-strip te bewaren (R, G, B).
+led_strip_color = (0, 0, 40)
 
 # Eerst alle LED's doven.
 for i in range(number_of_leds):
-    np[i] = (0, 0, 0, 0)
+    np[i] = (0, 0, 0)
 np.write()
 
 
@@ -80,7 +80,7 @@ def on_mqtt_message(topic, message):
             time.sleep(0.1)
             # Uitschakelen.
             for i in range(number_of_leds):
-                np[i] = (0, 0, 0, 0)
+                np[i] = (0, 0, 0)
             np.write()
 
     # Komt de info van het 'color' topic?
@@ -90,29 +90,29 @@ def on_mqtt_message(topic, message):
         
         # Juiste kleur klaarzetten in de globale variabele.
         if(color_data["color"] == "red"):
-            led_strip_color = (255, 0, 0, 0)
+            led_strip_color = (255, 0, 0)
             
         if(color_data["color"] == "green"):
-            led_strip_color = (0, 255, 0, 0)
+            led_strip_color = (0, 255, 0)
             
         if(color_data["color"] == "blue"):
-            led_strip_color = (0, 0, 255, 0)
+            led_strip_color = (0, 0, 255)
             
         if(color_data["color"] == "white"):
-            led_strip_color = (0, 0, 0, 255)
+            led_strip_color = (255, 255, 255)
             
         if(color_data["color"] == "cyan"):
-            led_strip_color = (0, 255, 255, 0)
+            led_strip_color = (0, 255, 255)
             
         if(color_data["color"] == "magenta"):
-            led_strip_color = (255, 0, 255, 0)
+            led_strip_color = (255, 0, 255)
             
         if(color_data["color"] == "yellow"):
-            led_strip_color = (255, 255, 0, 0)
+            led_strip_color = (255, 255, 0)
         
         if(color_data["color"] == "random"):
             # Zie: https://docs.micropython.org/en/latest/library/random.html#random.randint
-            led_strip_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255), 0)
+            led_strip_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
             print(f"Nieuwe willekeurige kleur: {led_strip_color}.")
 
 # Zie: https://mpython.readthedocs.io/en/v2.2.1/library/mPython/umqtt.simple.html#create-object
