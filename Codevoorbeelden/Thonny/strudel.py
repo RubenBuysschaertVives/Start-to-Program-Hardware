@@ -38,8 +38,8 @@ np.write()
 
 # WiFi-instellingen klaarzetten.
 # TODO: aanpassen naar wens.
-ssid = 'A118_IWT_TEMPORARY'
-password = 'VIVES_ELOICT'
+ssid = 'Core-Z5'
+password = 'kaya5050'
 
 # Verbinding maken met het WiFi-netwerk.
 wlan = network.WLAN(network.STA_IF)
@@ -61,62 +61,56 @@ print()
 def on_mqtt_message(topic, message):
     # De globale variabele voor het kleur ophalen.
     global led_strip_color
-    
-    # Info geven aan de gebruiker.
-    print(f"Bericht ontvangen op '{str(topic, 'utf-8')}': {str(message, 'utf-8')}.")
-    
+
+    # Topic omzetten naar string (eenmalig).
+    topic_str = str(topic, 'utf-8')
+
     # Komt de info van het 'control' topic?
-    if(str(topic, 'utf-8') == "strudel/control"):
+    if topic_str == "strudel/control":
         # De data in JSON-formaat, omzetten naar een Python dictionary.
         strudel_data = ujson.loads(str(message, 'utf-8'))
-        
+
         # LED's inschakelen indien gevraagd.
-        if(strudel_data["s"] == "on"):
-            # Inschakelen.
-            for i in range(number_of_leds):
-                np[i] = led_strip_color
+        if strudel_data["s"] == "on":
+            # Inschakelen met fill() (sneller dan loop).
+            np.fill(led_strip_color)
             np.write()
-            # Even wachten.
-            time.sleep(0.1)
+            # Korte flash (20ms in plaats van 100ms).
+            time.sleep(0.02)
             # Uitschakelen.
-            for i in range(number_of_leds):
-                np[i] = (0, 0, 0)
+            np.fill((0, 0, 0))
             np.write()
+            print("Flash!")  # Print NA de flash voor snelheid.
 
     # Komt de info van het 'color' topic?
-    if(str(topic, 'utf-8') == "strudel/color"):
+    if topic_str == "strudel/color":
         # De data in JSON-formaat, omzetten naar een Python dictionary.
         color_data = ujson.loads(str(message, 'utf-8'))
-        
-        # Juiste kleur klaarzetten in de globale variabele.
-        if(color_data["color"] == "red"):
-            led_strip_color = (255, 0, 0)
-            
-        if(color_data["color"] == "green"):
-            led_strip_color = (0, 255, 0)
-            
-        if(color_data["color"] == "blue"):
-            led_strip_color = (0, 0, 255)
-            
-        if(color_data["color"] == "white"):
-            led_strip_color = (255, 255, 255)
-            
-        if(color_data["color"] == "cyan"):
-            led_strip_color = (0, 255, 255)
-            
-        if(color_data["color"] == "magenta"):
-            led_strip_color = (255, 0, 255)
-            
-        if(color_data["color"] == "yellow"):
-            led_strip_color = (255, 255, 0)
-        
-        if(color_data["color"] == "random"):
+
+        # Dictionary voor snellere color lookup.
+        color_map = {
+            "red": (255, 0, 0),
+            "green": (0, 255, 0),
+            "blue": (0, 0, 255),
+            "white": (255, 255, 255),
+            "cyan": (0, 255, 255),
+            "magenta": (255, 0, 255),
+            "yellow": (255, 255, 0)
+        }
+
+        requested_color = color_data["color"]
+
+        if requested_color == "random":
             # Zie: https://docs.micropython.org/en/latest/library/random.html#random.randint
             led_strip_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
             print(f"Nieuwe willekeurige kleur: {led_strip_color}.")
+        elif requested_color in color_map:
+            led_strip_color = color_map[requested_color]
+            print(f"Kleur ingesteld: {requested_color}.")
 
 # Zie: https://mpython.readthedocs.io/en/v2.2.1/library/mPython/umqtt.simple.html#create-object
-client = MQTTClient("esp32", "mqtt.rubu.be", port=1885, ssl=True, user="strudel", password="qifj3258")
+# Lokale MQTT broker op de PC (zelfde netwerk als ESP32)
+client = MQTTClient("esp32", "10.75.1.63", port=1883, ssl=False)
 
 # Koppeling maken naar callback functie indien een bericht ontvangen werd.
 client.set_callback(on_mqtt_message)
