@@ -83,17 +83,16 @@
             <h1>MQTT-instellingen</h1>
             <p>
                 <label for="tbxMqttBroker">MQTT-broker</label>
-                <input type="text" id="tbxMqttBroker" value="mqtt.rubu.be">
-            </p>
-            
-            <p>
-                <label for="tbxMqttBroker">MQTT-gebruiker</label>
-                <input type="text" id="tbxMqttUser" value="strudel">
+                <input type="text" id="tbxMqttBroker" value="localhost:9001" disabled>
             </p>
 
             <p>
-                <label for="tbxMqttBroker">MQTT-wachtwoord</label>
-                <input type="password" id="tbxMqttPwd" value="qifj3258">
+                <label for="tbxMqttBroker">Verbinding</label>
+                <input type="text" id="tbxMqttConnection" value="WebSocket (geen SSL)" disabled>
+            </p>
+
+            <p>
+                <em>Lokale MQTT broker - geen authenticatie vereist</em>
             </p>
         </div>
 

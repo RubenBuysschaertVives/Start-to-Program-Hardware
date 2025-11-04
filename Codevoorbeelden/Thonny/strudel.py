@@ -75,8 +75,8 @@ def on_mqtt_message(topic, message):
             # Inschakelen met fill() (sneller dan loop).
             np.fill(led_strip_color)
             np.write()
-            # Even wachten.
-            time.sleep(0.1)
+            # Korte flash (20ms in plaats van 100ms).
+            time.sleep(0.02)
             # Uitschakelen.
             np.fill((0, 0, 0))
             np.write()
@@ -136,7 +136,8 @@ def on_mqtt_message(topic, message):
             print(f"Travel! ({requested_color})")
 
 # Zie: https://mpython.readthedocs.io/en/v2.2.1/library/mPython/umqtt.simple.html#create-object
-client = MQTTClient("esp32", "mqtt.rubu.be", port=1885, ssl=True, user="strudel", password="qifj3258")
+# Lokale MQTT broker op de PC (zelfde netwerk als ESP32)
+client = MQTTClient("esp32", "10.75.1.63", port=1883, ssl=False)
 
 # Koppeling maken naar callback functie indien een bericht ontvangen werd.
 client.set_callback(on_mqtt_message)

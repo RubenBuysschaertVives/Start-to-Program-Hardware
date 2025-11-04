@@ -7,6 +7,6 @@ const soundConst = sound("bd bd hh bd rim bd hh bd, - - - - jazz - - -")
 const mqttConst = sound("- - - - on - - -")
 
 stack(
-soundConst.scope(),
-mqttConst.mqtt('strudel', 'qifj3258', 'strudel/control', 'wss://mqtt.rubu.be:9003/mqtt', 'strudelid437354', 0)
+  soundConst.scope(),
+  mqttConst.mqtt('strudel', 'qifj3258', 'strudel/control', 'wss://mqtt.rubu.be:9003/mqtt', 'strudelid437354', 0)
 )
