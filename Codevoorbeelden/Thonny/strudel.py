@@ -98,8 +98,8 @@ def on_mqtt_message(topic, message):
             "yellow": (255, 255, 0)
         }
 
-        # Strudel sends color value in "s" key (sound value)
-        requested_color = color_data["s"]
+        # Get color from "color" key (web app sends this)
+        requested_color = color_data["color"]
 
         # Get the mode (flash or travel), default to flash if not specified
         mode = color_data.get("mode", "flash")
