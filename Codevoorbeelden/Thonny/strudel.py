@@ -38,8 +38,8 @@ np.write()
 
 # WiFi-instellingen klaarzetten.
 # TODO: aanpassen naar wens.
-ssid = 'A118_IWT_TEMPORARY'
-password = 'VIVES_ELOICT'
+ssid = 'Core-Z5'
+password = 'kaya5050'
 
 # Verbinding maken met het WiFi-netwerk.
 wlan = network.WLAN(network.STA_IF)
@@ -98,7 +98,11 @@ def on_mqtt_message(topic, message):
             "yellow": (255, 255, 0)
         }
 
-        requested_color = color_data["color"]
+        # Strudel sends color value in "s" key (sound value)
+        requested_color = color_data["s"]
+
+        # Get the mode (flash or travel), default to flash if not specified
+        mode = color_data.get("mode", "flash")
 
         if requested_color == "random":
             # Zie: https://docs.micropython.org/en/latest/library/random.html#random.randint
@@ -107,6 +111,29 @@ def on_mqtt_message(topic, message):
         elif requested_color in color_map:
             led_strip_color = color_map[requested_color]
             print(f"Kleur ingesteld: {requested_color}.")
+
+        # Trigger the LED effect when color/mode changes
+        print(f"Triggering LED effect: {mode}")
+        if mode == "flash":
+            # Flash effect: all LEDs on briefly then off
+            np.fill(led_strip_color)
+            np.write()
+            time.sleep(0.1)
+            np.fill((0, 0, 0))
+            np.write()
+            print(f"Flash! ({requested_color})")
+        elif mode == "travel":
+            # Travel effect: light travels from first to last LED in 300ms
+            delay_per_led = 200 / number_of_leds / 1000  # Convert to seconds
+            for i in range(number_of_leds):
+                np[i] = led_strip_color
+                np.write()
+                time.sleep(delay_per_led)
+            # Turn all LEDs off after the travel
+            time.sleep(0.1)
+            np.fill((0, 0, 0))
+            np.write()
+            print(f"Travel! ({requested_color})")
 
 # Zie: https://mpython.readthedocs.io/en/v2.2.1/library/mPython/umqtt.simple.html#create-object
 client = MQTTClient("esp32", "mqtt.rubu.be", port=1885, ssl=True, user="strudel", password="qifj3258")
@@ -130,8 +157,10 @@ print(f"Geabonneerd op topic '{topic}'.")
 
 # Oneindige lus starten om continu te 'luisteren' naar binnenkomende berichten.
 while True:
-    # Wacht op een bericht. Als er één is, roep de callback functie aan.
-    client.wait_msg()
+    # Check voor berichten (non-blocking). Verwerk als er één is.
+    client.check_msg()
+    # Kleine pauze om CPU te ontlasten
+    time.sleep_ms(10)
 
 # Unreachable, maar verbreek de verbinding...
 client.disconnect()

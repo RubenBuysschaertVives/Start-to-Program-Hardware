@@ -1,0 +1,85 @@
+================================================================================
+ESP32-ADF WIRING DIAGRAM - LED STRIP CONNECTION
+================================================================================
+
+UEXT Connector (10-pin, 2x5):
+┌─────────────────────┐
+│  1  3  5  7  9      │  (Top Row)
+│  2  4  6  8 10      │  (Bottom Row)
+└─────────────────────┘
+
+Pin Layout:
+Pin 1:  3.3V       -> Not used (use external 5V for LEDs)
+Pin 2:  GND        -> LED Strip GND (connect this!)
+Pin 3:  TXD/GPIO19 -> LED Strip DATA (connect this!)
+Pin 4:  RXD        -> Not used
+Pin 5:  SCL        -> Used internally for I2C (ES8388)
+Pin 6:  SDA        -> Used internally for I2C (ES8388)
+Pin 7:  MISO       -> Not used
+Pin 8:  MOSI       -> Not used
+Pin 9:  SCK        -> Not used
+Pin 10: SSEL       -> Not used
+
+LED Strip Connection:
+┌─────────────────┐
+│  WS2813 Strip   │
+│                 │
+│  [DIN] [5V] [GND]
+└────┬────┬────┬──┘
+     │    │    │
+     │    │    └──────> UEXT Pin 2 (GND)
+     │    │
+     │    └───────────> External 5V Power Supply (+)
+     │
+     └────────────────> UEXT Pin 3 (GPIO 19)
+
+External Power Supply (5V):
+┌──────────────────┐
+│  5V Power Supply │
+│   (4A or more)   │
+│                  │
+│  [+5V]    [GND]  │
+└───┬────────┬─────┘
+    │        │
+    │        └─────────> Connect to:
+    │                    - UEXT Pin 2 (share GND)
+    │                    - LED Strip GND
+    │
+    └──────────────────> LED Strip 5V
+
+IMPORTANT:
+- All grounds must be connected together (ESP32-ADF GND, LED GND, Power Supply GND)
+- Do NOT power 60 LEDs from the ESP32 board's 3.3V or 5V pins
+- Use adequate wire gauge for LED power (18-20 AWG recommended)
+- Keep data wire short (<1m) for reliable communication
+
+Audio Input (Built-in):
+- Microphones: Built into ESP32-ADF board
+- No external connections needed
+- Position board so microphones face the sound source
+
+Internal I2S Connections (automatic):
+GPIO 5:  I2S Bit Clock (BCK)    -> ES8388
+GPIO 25: I2S Word Select (WS)   -> ES8388
+GPIO 35: I2S Data In (SD)       -> ES8388 ADC
+GPIO 18: I2C Data (SDA)         -> ES8388
+GPIO 23: I2C Clock (SCL)        -> ES8388
+
+================================================================================
+QUICK START CHECKLIST
+================================================================================
+
+□ Connect LED strip DATA to UEXT pin 3
+□ Connect LED strip GND to UEXT pin 2
+□ Connect LED strip 5V to external power supply
+□ Share GND between ESP32-ADF and power supply
+□ Verify power supply voltage (5V)
+□ Verify power supply current rating (4A+ for 60 LEDs)
+□ Flash MicroPython firmware to ESP32-ADF
+□ Upload es8388.py to board
+□ Upload strudel_adf.py to board
+□ Edit WiFi credentials in code
+□ Test with serial console open
+□ Adjust BEAT_THRESHOLD if needed
+
+================================================================================

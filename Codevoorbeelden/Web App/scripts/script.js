@@ -83,8 +83,12 @@ function onMqttConnected() {
     console.log("Connected to MQTT-broker.");
 
     try {
+        // Get the selected mode (flash or travel)
+        var selectedMode = document.querySelector('input[name="ledMode"]:checked').value;
+        console.log("Selected mode:", selectedMode);
+
         // MQTT-data publishen via een Message object.
-        let message = new Paho.MQTT.Message("{\"color\":\"" + requestedColor + "\"}");
+        let message = new Paho.MQTT.Message("{\"s\":\"" + requestedColor + "\",\"mode\":\"" + selectedMode + "\"}");
         message.destinationName = mqttTopic;			  // Topic bepalen.
         message.qos = 0;                                  // Fire and forget.
         message.retained = false;                         // Bericht niet afleveren aan nieuw verbonden clients.
