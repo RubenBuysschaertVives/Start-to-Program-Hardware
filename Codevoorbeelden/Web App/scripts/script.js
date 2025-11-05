@@ -55,20 +55,21 @@ window.addEventListener('load', function(){
 
             try {
                 // LET OP: de Paho bibliotheek gebruikt WebSockets. Dus kies de juiste poort!
-                // Lokale MQTT broker op localhost:9001
-                mqttClient = new Paho.MQTT.Client("localhost", 9001,
-                "/", "strudel" + String(clientId));
+                // RUBU MQTT broker met WebSockets op poort 9003
+                mqttClient = new Paho.MQTT.Client("mqtt.rubu.be", 9003,
+                "/mqtt", "strudel" + String(clientId));
 
                 // Eén of enkele events registreren.
                 mqttClient.onConnectionLost = onMqttDisconnected;
 
                 // Verbinden met dictionary met opties: zie: http://www.eclipse.org/paho/files/jsdoc/index.html.
-                // Geen username/password nodig voor lokale broker met allow_anonymous
                 mqttClient.connect(
                 {
                     onSuccess: onMqttConnected,
                     onFailure: onMqttFailure,
-                    useSSL: false
+                    useSSL: true,
+                    userName: "strudel",
+                    password: "qifj3258"
                 });
             }
             catch (error) {
