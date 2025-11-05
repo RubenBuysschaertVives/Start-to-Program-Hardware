@@ -8,7 +8,7 @@
 #
 # Start To Study - Vives Elektronica-ICT
 
-# Bibliotheken importeren
+# Import libraries
 import network
 import time
 from umqtt.simple import MQTTClient
@@ -17,36 +17,35 @@ import neopixel
 import ujson
 import random
 import array
-import struct
 
 # Import ES8388 driver (Olimex direct port)
 from es8388_olimex import ES8388
 
 # ============================================================================
-# CONFIGURATIE
+# CONFIGURATION
 # ============================================================================
 
-# LED-strip instellingen
+# LED strip settings
 NUMBER_OF_LEDS = 60
 LED_PIN = 19  # GPIO 19 (UEXT connector pin 3 - UART TX)
 
-# WiFi-instellingen
+# WiFi settings
 WIFI_SSID = 'Core-Z5'
 WIFI_PASSWORD = 'kaya5050'
 
-# MQTT-instellingen
+# MQTT settings
 MQTT_BROKER = 'mqtt.rubu.be'
 MQTT_PORT = 1885
 MQTT_USER = 'strudel'
 MQTT_PASSWORD = 'qifj3258'
 MQTT_COLOR_TOPIC = 'strudel/color'
 
-# I2C instellingen voor ES8388 codec
+# I2C settings for ES8388 codec
 I2C_SDA = 18
 I2C_SCL = 23
 I2C_FREQ = 100000
 
-# I2S instellingen voor microphone
+# I2S settings for microphone
 I2S_ID = 0
 I2S_SCK = 5      # Bit clock
 I2S_WS = 25      # Word select
@@ -54,13 +53,13 @@ I2S_SD = 35      # Data in (microphone)
 I2S_SAMPLE_RATE = 16000  # 16kHz sample rate
 I2S_BITS = 16
 
-# Beat detection instellingen
-BEAT_THRESHOLD = 5000      # Amplitude threshold for beat detection
+# Beat detection settings
+BEAT_THRESHOLD = 500      # Amplitude threshold for beat detection
 BEAT_COOLDOWN_MS = 100     # Minimum time between beats (ms)
 AUDIO_BUFFER_SIZE = 512    # Number of samples to read at once
 
 # ============================================================================
-# GLOBALE VARIABELEN
+# GLOBAL VARIABLES
 # ============================================================================
 
 # LED strip color (R, G, B)
@@ -166,41 +165,6 @@ codec.set_mic_gain(24)  # 24dB microphone gain
 codec.start()  # Use Olimex start method
 
 print("ES8388 codec ready")
-
-# Dump registers for debugging
-codec.read_all_registers()
-
-# Test: Try to read a few samples immediately after codec init
-print("\nTesting immediate audio read after codec init...")
-test_buffer = bytearray(100)
-test_read = audio_in.readinto(test_buffer)
-print(f"Test read: {test_read} bytes")
-print(f"Test data: {[test_buffer[i] for i in range(min(20, test_read))]}")
-
-# Additional debug: Check if data is actually changing over time
-print("\nWaiting 500ms and reading again...")
-time.sleep_ms(500)
-test_buffer2 = bytearray(100)
-test_read2 = audio_in.readinto(test_buffer2)
-print(f"Second read: {test_read2} bytes")
-print(f"Second data: {[test_buffer2[i] for i in range(min(20, test_read2))]}")
-
-# Check if the two reads are identical (which would be suspicious)
-if test_buffer[:test_read] == test_buffer2[:test_read2]:
-    print("WARNING: Both reads returned IDENTICAL data - codec may not be capturing!")
-else:
-    print("Data is changing - codec appears to be capturing")
-
-# Additional diagnostic: Try reading a large chunk
-print("\nTrying large read (4096 bytes)...")
-large_buffer = bytearray(4096)
-large_read = audio_in.readinto(large_buffer)
-print(f"Large read: {large_read} bytes")
-# Count how many bytes are non-zero
-non_zero_count = sum(1 for b in large_buffer[:large_read] if b != 0)
-print(f"Non-zero bytes: {non_zero_count} out of {large_read} ({non_zero_count*100//large_read if large_read > 0 else 0}%)")
-
-print()
 
 # ============================================================================
 # LED EFFECTS
