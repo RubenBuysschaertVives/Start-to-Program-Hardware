@@ -2,7 +2,7 @@
 # OPM: zorg dat de MicroPython interpreter geladen is in het microcontrollerbord. Doe
 # dat best via 'Thonny - configure interpreter...' (onderaan rechts).
 #
-# Start To Study - Vives Elektronica-ICT
+# Start To Study - Vives Elektronica-ICT - Kortrijk
 
 
 # Bibliotheken importeren.
@@ -27,8 +27,9 @@ din = machine.Pin(5)
 # Constructor info: https://docs.micropython.org/en/latest/library/neopixel.html
 np = neopixel.NeoPixel(din, number_of_leds, bpp=3)
 
-# Globale variabele (tuple) om het kleur van de LED-strip te bewaren (R, G, B).
-led_strip_color = (0, 0, 40)
+# Globale variabele die bijhoudt welke kleur laatst aangevraagd werd (via MQTT). Zet dat kleur standaard op blauw.
+requested_color = "blue"
+
 
 # Eerst alle LED's doven.
 for i in range(number_of_leds):
@@ -37,9 +38,9 @@ np.write()
 
 
 # WiFi-instellingen klaarzetten.
-# TODO: aanpassen naar wens.
-ssid = 'A118_IWT_TEMPORARY'
-password = 'VIVES_ELOICT'
+# TODO: aanpassen naar wens, volgens het beschikbare WiFi-netwerk.
+ssid = 'S2SW'
+password = 'sttstw12'
 
 # Verbinding maken met het WiFi-netwerk.
 wlan = network.WLAN(network.STA_IF)
@@ -56,11 +57,48 @@ print(wlan.ifconfig())
 print()
 
 
+# Functie maken die een bepaalde kleur (string), omzet naar RGB-waarden (tuple).
+def color_to_rgb(color):
+    # Lokale variabele (tuple) om het kleur van de LED-strip te bewaren (R, G, B).
+    led_strip_color = (0, 0, 0)
+
+    # Juiste kleur klaarzetten in de lokale variabele.
+    if(color == "red"):
+        led_strip_color = (255, 0, 0)
+        
+    if(color == "green"):
+        led_strip_color = (0, 255, 0)
+        
+    if(color == "blue"):
+        led_strip_color = (0, 0, 255)
+        
+    if(color == "white"):
+        led_strip_color = (255, 255, 255)
+        
+    if(color == "cyan"):
+        led_strip_color = (0, 255, 255)
+        
+    if(color == "magenta"):
+        led_strip_color = (255, 0, 255)
+        
+    if(color == "yellow"):
+        led_strip_color = (255, 255, 0)
+    
+    if(color == "random"):
+        # Zie: https://docs.micropython.org/en/latest/library/random.html#random.randint
+        led_strip_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        
+    print(f"Huidige kleur: {led_strip_color}.")
+    
+    # Het resultaat teruggeven.
+    return led_strip_color
+
+
 # MQTT-instellingen klaarzetten.
 # Een callback functie voorbereiden, om een ontvangen MQTT-bericht te verwerken.
 def on_mqtt_message(topic, message):
     # De globale variabele voor het kleur ophalen.
-    global led_strip_color
+    global requested_color
     
     # Info geven aan de gebruiker.
     print(f"Bericht ontvangen op '{str(topic, 'utf-8')}': {str(message, 'utf-8')}.")
@@ -70,51 +108,28 @@ def on_mqtt_message(topic, message):
         # De data in JSON-formaat, omzetten naar een Python dictionary.
         strudel_data = ujson.loads(str(message, 'utf-8'))
         
-        # LED's inschakelen indien gevraagd.
+        # LED's inschakelen indien gevraagd. Bekijk daarvoor de 's' key uit de dictionary.
         if(strudel_data["s"] == "on"):
-            # Inschakelen.
+            # Kleur omzetten van tekst naar tuple.
+            led_strip_color = color_to_rgb(requested_color)
+            
+            # LED's inschakelen.
             for i in range(number_of_leds):
                 np[i] = led_strip_color
             np.write()
             # Even wachten.
             time.sleep(0.1)
-            # Uitschakelen.
+            # LED'S terug uitschakelen.
             for i in range(number_of_leds):
                 np[i] = (0, 0, 0)
             np.write()
 
     # Komt de info van het 'color' topic?
     if(str(topic, 'utf-8') == "strudel/color"):
-        # De data in JSON-formaat, omzetten naar een Python dictionary.
-        color_data = ujson.loads(str(message, 'utf-8'))
-        
-        # Juiste kleur klaarzetten in de globale variabele.
-        if(color_data["color"] == "red"):
-            led_strip_color = (255, 0, 0)
-            
-        if(color_data["color"] == "green"):
-            led_strip_color = (0, 255, 0)
-            
-        if(color_data["color"] == "blue"):
-            led_strip_color = (0, 0, 255)
-            
-        if(color_data["color"] == "white"):
-            led_strip_color = (255, 255, 255)
-            
-        if(color_data["color"] == "cyan"):
-            led_strip_color = (0, 255, 255)
-            
-        if(color_data["color"] == "magenta"):
-            led_strip_color = (255, 0, 255)
-            
-        if(color_data["color"] == "yellow"):
-            led_strip_color = (255, 255, 0)
-        
-        if(color_data["color"] == "random"):
-            # Zie: https://docs.micropython.org/en/latest/library/random.html#random.randint
-            led_strip_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-            print(f"Nieuwe willekeurige kleur: {led_strip_color}.")
+        # De data in JSON-formaat, omzetten naar een Python dictionary en daaruit het kleur bewaren.
+        requested_color = ujson.loads(str(message, 'utf-8'))["color"]
 
+# MQTT-client maken.
 # Zie: https://mpython.readthedocs.io/en/v2.2.1/library/mPython/umqtt.simple.html#create-object
 client = MQTTClient("esp32", "mqtt.rubu.be", port=1885, ssl=True, user="strudel", password="qifj3258")
 
