@@ -251,13 +251,11 @@ def on_mqtt_message(topic, message):
     global led_strip_color, led_mode
 
     topic_str = str(topic, 'utf-8')
+    message_str = str(message, 'utf-8')
 
     # Handle color topic
     if topic_str == MQTT_COLOR_TOPIC:
         try:
-            # Parse JSON data
-            color_data = ujson.loads(str(message, 'utf-8'))
-
             # Color map
             color_map = {
                 "red": (255, 0, 0),
@@ -269,8 +267,22 @@ def on_mqtt_message(topic, message):
                 "yellow": (255, 255, 0)
             }
 
-            # Get color from message
-            requested_color = color_data.get("s", "")
+            requested_color = ""
+            
+            # Try to parse as JSON first (web app format)
+            try:
+                color_data = ujson.loads(message_str)
+                requested_color = color_data.get("s", "")
+                
+                # Update mode if specified (only in JSON format)
+                if "mode" in color_data:
+                    led_mode = color_data["mode"]
+                    print(f"Mode set to: {led_mode}")
+                    
+            except (ValueError, KeyError):
+                # Not JSON, treat as plain text (Strudel format)
+                requested_color = message_str.strip().lower()
+                print(f"Received plain text color from Strudel: {requested_color}")
 
             # Update color
             if requested_color == "random":
@@ -281,15 +293,13 @@ def on_mqtt_message(topic, message):
             elif requested_color in color_map:
                 led_strip_color = color_map[requested_color]
                 print(f"Color set to: {requested_color} {led_strip_color}")
+            else:
+                print(f"Unknown color: {requested_color}")
 
-            # Update mode if specified
-            if "mode" in color_data:
-                led_mode = color_data["mode"]
-                print(f"Mode set to: {led_mode}")
-
-            # Trigger LED effect when color changes (for testing)
-            print("Triggering LED effect from color change...")
-            trigger_led_effect()
+            # Trigger LED effect when color changes
+            if requested_color in color_map or requested_color == "random":
+                print("Triggering LED effect from color change...")
+                trigger_led_effect()
 
         except Exception as e:
             print(f"Error processing color message: {e}")
