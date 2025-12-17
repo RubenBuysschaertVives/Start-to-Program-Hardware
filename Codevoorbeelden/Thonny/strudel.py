@@ -2,7 +2,7 @@
 # OPM: zorg dat de MicroPython interpreter geladen is in het microcontrollerbord. Doe
 # dat best via 'Thonny - configure interpreter...' (onderaan rechts).
 #
-# Start To Study - Vives Elektronica-ICT - Kortrijk
+# Start to Program Hardware - Vives Elektronica-ICT - Kortrijk
 
 
 # Bibliotheken importeren.
@@ -30,6 +30,11 @@ np = neopixel.NeoPixel(din, number_of_leds, bpp=3)
 
 # Globale variabele die bijhoudt welke kleur laatst aangevraagd werd (via MQTT). Zet dat kleur standaard op blauw.
 requested_color = "blue"
+
+# TODO: topics aanpassen met een verwijzing naar je eigen naam.
+# Globale variabelen die de MQTT-topics bevatten die gebruikt moeten worden.
+controlTopic = "strudel/voornaamachternaam/control"
+colorTopic = "strudel/voornaamachternaam/color"
 
 
 # TODO: tupple met drie nullen opvullen.
@@ -106,7 +111,7 @@ def on_mqtt_message(topic, message):
     print(f"Bericht ontvangen op '{str(topic, 'utf-8')}': {str(message, 'utf-8')}.")
     
     # Komt de info van het 'control' topic?
-    if(str(topic, 'utf-8') == "strudel/control"):
+    if(str(topic, 'utf-8') == controlTopic):
         # De data in JSON-formaat, omzetten naar een Python dictionary.
         strudel_data = ujson.loads(str(message, 'utf-8'))
         
@@ -128,7 +133,7 @@ def on_mqtt_message(topic, message):
             np.write()
 
     # Komt de info van het 'color' topic?
-    if(str(topic, 'utf-8') == "strudel/color"):
+    if(str(topic, 'utf-8') == colorTopic):
         # De data in JSON-formaat, omzetten naar een Python dictionary en daaruit het kleur bewaren.
         requested_color = ujson.loads(str(message, 'utf-8'))["color"]
 
@@ -145,12 +150,10 @@ print("Verbonden met de MQTT-broker.")
 print()
 
 # Abonneren op twee interessante topics...
-topic = "strudel/control"
-client.subscribe(topic)
-print(f"Geabonneerd op topic '{topic}'.")
-topic = "strudel/color"
-client.subscribe(topic)
-print(f"Geabonneerd op topic '{topic}'.")
+client.subscribe(controlTopic)
+print(f"Geabonneerd op topic '{controlTopic}'.")
+client.subscribe(colorTopic)
+print(f"Geabonneerd op topic '{colorTopic}'.")
 
 
 # Oneindige lus starten om continu te 'luisteren' naar binnenkomende berichten.

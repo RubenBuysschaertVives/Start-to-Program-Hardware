@@ -23,7 +23,6 @@ var requestedColor = "none";
 
 // MQTT-gedeelte implementeren via een JavaScript MQTT-client (Paho).
 var mqttClient;
-const mqttTopic = "strudel/color";
 
 window.addEventListener('load', function(){
     // Service worker laden, zodat het een echte PWA wordt.
@@ -86,9 +85,9 @@ function onMqttConnected() {
         // MQTT-data publishen via een Message object.
         // TODO: het requestedColor toevoegen als value...
         let message = new Paho.MQTT.Message("{\"color\":\"" + requestedColor + "\"}");
-        message.destinationName = mqttTopic;			  // Topic bepalen.
-        message.qos = 0;                                  // Fire and forget.
-        message.retained = false;                         // Bericht niet afleveren aan nieuw verbonden clients.
+        message.destinationName = document.getElementById("tbxMqttColorTopic").value;			  // Topic bepalen.
+        message.qos = 0;                                                                          // Fire and forget.
+        message.retained = false;                                                                 // Bericht niet afleveren aan nieuw verbonden clients.
         mqttClient.send(message);
 
         console.log("Message published to MQTT-broker.");
