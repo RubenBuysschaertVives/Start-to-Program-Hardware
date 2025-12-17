@@ -14,10 +14,11 @@ import neopixel
 import ujson
 import random
 
+# TODO: aantal LED's bepalen.
+# Een stukje LED-strip (met telkens 60 LED's per meter), van 5 LED's (R, G, B) in totaal.
+number_of_leds = 5
 
-# Eén meter LED-strip met telkens 60 LED's per meter (R, G, B).
-number_of_leds = 60
-
+# TODO: koppeling met pin maken.
 # Aangeven op welke pin de LED-strip is gekoppeld met de microcontroller.
 din = machine.Pin(5)
 
@@ -31,6 +32,7 @@ np = neopixel.NeoPixel(din, number_of_leds, bpp=3)
 requested_color = "blue"
 
 
+# TODO: tupple met drie nullen opvullen.
 # Eerst alle LED's doven.
 for i in range(number_of_leds):
     np[i] = (0, 0, 0)
@@ -39,8 +41,8 @@ np.write()
 
 # WiFi-instellingen klaarzetten.
 # TODO: aanpassen naar wens, volgens het beschikbare WiFi-netwerk.
-ssid = 'S2SW'
-password = 'sttstw12'
+ssid = 'A118_IWT_TEMPORARY'
+password = '...'
 
 # Verbinding maken met het WiFi-netwerk.
 wlan = network.WLAN(network.STA_IF)
@@ -110,6 +112,7 @@ def on_mqtt_message(topic, message):
         
         # LED's inschakelen indien gevraagd. Bekijk daarvoor de 's' key uit de dictionary.
         if(strudel_data["s"] == "on"):
+            # TODO: de omzettingsfunctie oproepen.
             # Kleur omzetten van tekst naar tuple.
             led_strip_color = color_to_rgb(requested_color)
             
