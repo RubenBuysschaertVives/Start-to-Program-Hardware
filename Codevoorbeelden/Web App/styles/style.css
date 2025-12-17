@@ -134,7 +134,7 @@ body > h1:first-of-type{
 
 .red{
     /* TODO: background color op vivesRed zetten. */
-    background-color: var(--vivesRed);
+    background-color: ...
     color: white;
     padding: var(--defaultMargin);
     border-style: none;

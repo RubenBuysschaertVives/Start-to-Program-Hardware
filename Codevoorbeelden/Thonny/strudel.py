@@ -16,11 +16,11 @@ import random
 
 # TODO: aantal LED's bepalen.
 # Een stukje LED-strip (met telkens 60 LED's per meter), van 5 LED's (R, G, B) in totaal.
-number_of_leds = 5
+number_of_leds = ...
 
 # TODO: koppeling met pin maken.
 # Aangeven op welke pin de LED-strip is gekoppeld met de microcontroller.
-din = machine.Pin(5)
+din = machine.Pin(...)
 
 # Een NeoPixel object maken met de juiste instellingen.
 # Aangezien we hier een RGB LED-strip gebruiken, zijn er 3 'bytes per pixel'.
@@ -40,7 +40,7 @@ colorTopic = "strudel/voornaamachternaam/color"
 # TODO: tupple met drie nullen opvullen.
 # Eerst alle LED's doven.
 for i in range(number_of_leds):
-    np[i] = (0, 0, 0)
+    np[i] = ...
 np.write()
 
 
@@ -119,7 +119,7 @@ def on_mqtt_message(topic, message):
         if(strudel_data["s"] == "on"):
             # TODO: de omzettingsfunctie oproepen.
             # Kleur omzetten van tekst naar tuple.
-            led_strip_color = color_to_rgb(requested_color)
+            led_strip_color = ...
             
             # LED's inschakelen.
             for i in range(number_of_leds):

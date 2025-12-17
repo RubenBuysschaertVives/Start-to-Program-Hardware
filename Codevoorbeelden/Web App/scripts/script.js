@@ -84,7 +84,7 @@ function onMqttConnected() {
     try {
         // MQTT-data publishen via een Message object.
         // TODO: het requestedColor toevoegen als value...
-        let message = new Paho.MQTT.Message("{\"color\":\"" + requestedColor + "\"}");
+        let message = new Paho.MQTT.Message("{\"color\":\"" + ... + "\"}");
         message.destinationName = document.getElementById("tbxMqttColorTopic").value;			  // Topic bepalen.
         message.qos = 0;                                                                          // Fire and forget.
         message.retained = false;                                                                 // Bericht niet afleveren aan nieuw verbonden clients.
