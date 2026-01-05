@@ -139,7 +139,8 @@ def on_mqtt_message(topic, message):
 
 # MQTT-client maken.
 # Zie: https://mpython.readthedocs.io/en/v2.2.1/library/mPython/umqtt.simple.html#create-object
-client = MQTTClient("esp32", "mqtt.rubu.be", port=1885, ssl=True, user="strudel", password="qifj3258")
+# TODO: unieke client-ID meegeven. Verander "esp32vives" in "espvoornaamachternaam".
+client = MQTTClient("esp32vives", "mqtt.rubu.be", port=1885, ssl=True, user="strudel", password="qifj3258")
 
 # Koppeling maken naar callback functie indien een bericht ontvangen werd.
 client.set_callback(on_mqtt_message)
