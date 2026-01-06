@@ -85,7 +85,7 @@ const soundConst = sound("bd bd hh bd rim bd hh bd, - - - - jazz - - -")
 const mqttConst = sound("- - - - on - - -")
 
 // Een constante maken met jouw naam erin.
-const yourName = 'rubu'
+const yourName = 'voornaamachternaam'
 
 // Een topic aanmaken en jouw naam erin verwerken.
 const topic = 'strudel/' + yourName + '/control'
