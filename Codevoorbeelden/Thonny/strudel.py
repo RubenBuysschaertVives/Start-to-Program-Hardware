@@ -33,8 +33,9 @@ requested_color = "blue"
 
 # TODO: topics aanpassen met een verwijzing naar je eigen naam.
 # Globale variabelen die de MQTT-topics bevatten die gebruikt moeten worden.
-controlTopic = "strudel/voornaamachternaam/control"
-colorTopic = "strudel/voornaamachternaam/color"
+jouwnaam = "voornaamachternaam"
+controlTopic = "strudel/" + jouwnaam + "/control"
+colorTopic = "strudel/" + jouwnaam + "/color"
 
 
 # TODO: tupple met drie nullen opvullen.
@@ -140,7 +141,7 @@ def on_mqtt_message(topic, message):
 # MQTT-client maken.
 # Zie: https://mpython.readthedocs.io/en/v2.2.1/library/mPython/umqtt.simple.html#create-object
 # TODO: unieke client-ID meegeven. Verander "esp32vives" in "espvoornaamachternaam".
-client = MQTTClient("esp32vives", "mqtt.rubu.be", port=1885, ssl=True, user="strudel", password="qifj3258")
+client = MQTTClient("esp32vives" + jouwnaam, "mqtt.rubu.be", port=1885, ssl=True, user="strudel", password="qifj3258")
 
 # Koppeling maken naar callback functie indien een bericht ontvangen werd.
 client.set_callback(on_mqtt_message)
