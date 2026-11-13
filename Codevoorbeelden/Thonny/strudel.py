@@ -1,6 +1,7 @@
 # MicroPython code voor op een Adafruit HUZZAH32 – ESP32 Feather Board.
 # OPM: zorg dat de MicroPython interpreter geladen is in het microcontrollerbord. Doe
-# dat best via 'Thonny - configure interpreter...' (onderaan rechts).
+# dat best via 'Thonny - configure interpreter...' (onderaan rechts). Zorg zeker
+# dat de driver voor het bordje geïnstalleerd is (CP210x driver).
 #
 # Start to Program Hardware - Vives Elektronica-ICT - Kortrijk
 
@@ -38,7 +39,7 @@ controlTopic = "strudel/" + jouwnaam + "/control"
 colorTopic = "strudel/" + jouwnaam + "/color"
 
 
-# TODO: tupple met drie nullen opvullen.
+# TODO: tuple met drie nullen opvullen.
 # Eerst alle LED's doven.
 for i in range(number_of_leds):
     np[i] = (0, 0, 0)
