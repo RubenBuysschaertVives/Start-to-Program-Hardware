@@ -6,7 +6,7 @@ In deze GitHub repository gaan we aan de slag met verschillende programmeertalen
 
 Dit project is een realisatie voor Vives Hogeschool, opleiding Elektronica-ICT Kortrijk. Bekijk zeker de drie keuzetrajecten die we daarin aanbieden:
 1. [Drone & AI-programming](https://www.vives.be/nl/technology/drone-ai-programming)
-2. [Smart Electronics](https://www.vives.be/nl/technology/apps-connected-devices)
-3. [Apps & Connected Devices](https://www.vives.be/nl/technology/smart-electronics)
+2. [Apps & Connected Devices](https://www.vives.be/nl/technology/apps-connected-devices)
+3. [Smart Electronics](https://www.vives.be/nl/technology/smart-electronics)
 
 R.Buysschaert
